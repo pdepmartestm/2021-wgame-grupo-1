@@ -18,25 +18,25 @@ object pantalla
 		
 		keyboard.left().onPressDo
 		({
-			const bala1 = new Bala(posicion=isaac.posicion())
+			const bala1 = new Bala(posicion=isaac.posicion(),velocidad=isaac.velocidadBala())
 			game.addVisual(bala1)
 			bala1.moverseIzquierda()
 		})
 		keyboard.right().onPressDo
 		({
-			const bala2 = new Bala(posicion=isaac.posicion().right(1))
+			const bala2 = new Bala(posicion=isaac.posicion().right(),velocidad=isaac.velocidadBala())
 			game.addVisual(bala2)
 			bala2.moverseDerecha()
 		})
 		keyboard.up().onPressDo
 		({
-			const bala3 = new Bala(posicion=isaac.posicion())
+			const bala3 = new Bala(posicion=isaac.posicion(),velocidad=isaac.velocidadBala())
 			game.addVisual(bala3)
 			bala3.moverseArriba()
 		})
 		keyboard.down().onPressDo
 		({
-			const bala4 = new Bala(posicion=isaac.posicion())
+			const bala4 = new Bala(posicion=isaac.posicion(),velocidad=isaac.velocidadBala())
 			game.addVisual(bala4)
 			bala4.moverseAbajo()
 		})
@@ -48,6 +48,7 @@ object pantalla
 object isaac
 {
 	var property posicion = game.center()
+	var property velocidadBala = 100
 	
 	method position() 
 	{
@@ -80,7 +81,7 @@ object isaac
 class Bala
 {
 	var posicion
-	var property velocidad = 100
+	var property velocidad
 	
 	method image()
 	{
