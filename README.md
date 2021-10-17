@@ -1,10 +1,12 @@
-# Nombre del juego (<- borrar y completar)
+# Isaac
 
 ## Equipo de desarrollo
 
-- Alguien
-- Persona
-- etc.
+- Nicolas Pannunzio
+- Federico Bietti
+- Louders Mendez
+- Alejo Dilluvio
+- Ayelen Roa
 
 ## Capturas
 
@@ -12,8 +14,13 @@
 
 ## Reglas de Juego / Instrucciones
 
-(Escribirlas)
+Para mover al personaje, utilizar:
+- W para ir arriba
+- A para ir a la izquierda
+- S para ir abajo
+- D para ir a la derecha
 
+Para disparar, utilizar las flechas de direccion
 
 ## Otros
 
