@@ -3,5 +3,5 @@ import isaac.*
 
 program juego 
 {
-	pantalla.iniciar()
+	juego.iniciar()
 }
