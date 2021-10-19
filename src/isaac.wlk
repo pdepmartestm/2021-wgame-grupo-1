@@ -194,9 +194,8 @@ class Gaper inherits Enemigo
 		position = posicion
 		image = "gaper.png"
 		evento = "perseguir"
-		game.addVisualIn(self,posicion)
-		game.onTick(100,evento,{self.perseguir(isaac)})
-		
+		game.addVisual(self)
+		game.onTick(1000,evento,{self.perseguir(isaac)})
 	}
 	
 	method perseguir(elemento)
