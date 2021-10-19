@@ -9,7 +9,9 @@ object juego
 	{
 		game.height(alto)
 		game.width(ancho)
+		game.addVisual(habitacion)
 		game.addVisual(isaac)
+		game.addVisual(barraIsaac)
 		
 		keyboard.w().onPressDo({isaac.avanza(isaac.position().up(1))})
 		keyboard.a().onPressDo({isaac.avanza(isaac.position().left(1))})
@@ -40,23 +42,50 @@ object juego
 		const a = new Gaper()
 		a.aparecer(game.at(5,5))
 		
+		game.onCollideDo(isaac,{algo => algo.impactaAIsaac()})
+		
 		game.start()
 	}
 	
 	method estaEnLaPantalla(posicion)
 	{
-		return posicion.x() >= 0 && posicion.x() < ancho && posicion.y() >= 0 && posicion.y() < alto
+		return posicion.x() >= 2 && posicion.x() < ancho-2 && posicion.y() >= 2 && posicion.y() < alto-1
 	}
 }
-
+object habitacion
+{
+	const position = game.at(0,0)
+	var image = "habitacion.png"
+	method position(){return position}
+	method image(){return image}
+}
+object barraIsaac
+{
+	const position = game.at(0.5,9)
+	var image = "Vida6.png"
+	var proxImage = "Vida5.png"
+	method image(){
+		return image
+	}
+	method position(){
+		return position
+	}
+	method recibeDanio(vida){
+		proxImage = "Vida"+vida+".png"
+		image = proxImage 
+	}
+	method seCura(){
+		
+	}
+}
 object isaac
 {
 	var property danio = 1
 	var property position = game.center()
-	var property vida = 5
-	
-	method image() {return "isaac.png"}
-	
+	var property vida = 6
+	var valor = "6"
+	var property image = "isaac.png"
+	method image() {return image}
 	method position() {return position}
 	
 	method avanza(posicion)
@@ -66,7 +95,15 @@ object isaac
 
 	method impactoEnemigo()
 	{
-		vida--
+		
+		if (vida>1)
+		{vida--valor = vida
+		barraIsaac.recibeDanio(valor)}
+		else{
+			game.stop()
+		}
+		
+		
 	}
 }
 
@@ -126,7 +163,7 @@ class LagrimaIsaac inherits Lagrima
 
 class Enemigo inherits Elemento
 {
-	var property vida = 30
+	var property vida = 10
 	
 	method impactoLagrimaEnemiga() {}
 	
@@ -136,7 +173,9 @@ class Enemigo inherits Elemento
 		if(vida <= 0) {self.desaparecer()}
 	}
 	
-	method impactaAIsaac() {}
+	method impactaAIsaac() {
+	isaac.impactoEnemigo()
+	}
 	
 	method avanza(posicion)
 	{
@@ -155,14 +194,18 @@ class Gaper inherits Enemigo
 		image = "gaper.png"
 		evento = "perseguir"
 		game.addVisualIn(self,posicion)
-		game.onTick(200,evento,{self.perseguir(isaac)})
+		game.onTick(10,evento,{self.avanza(position.right(1))})
+		
 	}
-	
+			
 	method perseguir(elemento)
 	{
-		if(elemento.position().x() > position.x()) {self.avanza(position.right(1))}
-		if(elemento.position().x() < position.x()) {self.avanza(position.left(1))}
-		if(elemento.position().y() > position.y()) {self.avanza(position.up(1))}
-		if(elemento.position().y() < position.y()) {self.avanza(position.down(1))}
+		var nuevapos = position
+		if(elemento.position().x() > self.position().x()) {nuevapos= nuevapos.right(1)}
+		if(elemento.position().x() < self.position().x()) {nuevapos= nuevapos.left(1)}
+		if(elemento.position().y() > self.position().y()) {nuevapos= nuevapos.up(1)}
+		if(elemento.position().y() < self.position().y()) {nuevapos= nuevapos.down(1)}
+		self.avanza(nuevapos)
 	}
-}
+	override method position(){return position}
+	}
