@@ -41,6 +41,9 @@ object juego
 		
 		const enemigo = new Gaper()
 		enemigo.aparecer(game.at(5,5))
+		const enemigo2 = new Maw()
+		enemigo2.aparecer(game.at(15,5))
+		
 		
 		game.onCollideDo(isaac,{algo => algo.impactaAIsaac()})
 		
@@ -52,6 +55,7 @@ object juego
 		return posicion.x() >= 2 && posicion.x() < ancho-2 && posicion.y() >= 2 && posicion.y() < alto-1
 	}
 }
+
 object habitacion
 {
 	const position = game.at(0,0)
@@ -59,31 +63,23 @@ object habitacion
 	method position(){return position}
 	method image(){return image}
 }
+
 object barraIsaac
 {
 	const position = game.at(0.5,9)
-	var image = "Vida6.png"
-	var proxImage = "Vida5.png"
 	method image(){
-		return image
+		return "Vida" + isaac.vida() + ".png"
 	}
 	method position(){
 		return position
 	}
-	method recibeDanio(vida){
-		proxImage = "Vida"+vida+".png"
-		image = proxImage 
-	}
-	method seCura(){
-		
-	}
 }
+
 object isaac
 {
 	var property danio = 1
 	var property position = game.center()
 	var property vida = 6
-	var valor = "6"
 	var property image = "isaac.png"
 	method image() {return image}
 	method position() {return position}
@@ -97,8 +93,9 @@ object isaac
 	{
 		
 		if (vida>1)
-		{vida--valor = vida
-		barraIsaac.recibeDanio(valor)}
+		{
+			vida--
+		}
 		else{
 			game.stop()
 		}
@@ -185,6 +182,14 @@ class Enemigo inherits Elemento
 			position = posicion
 		}
 	}
+	
+	method perseguir(elemento)
+	{
+		if(elemento.position().x() > self.position().x()) {self.avanza(position.right(1))}
+		if(elemento.position().x() < self.position().x()) {self.avanza(position.left(1))}
+		if(elemento.position().y() > self.position().y()) {self.avanza(position.up(1))}
+		if(elemento.position().y() < self.position().y()) {self.avanza(position.down(1))}
+	}
 }
 
 class Gaper inherits Enemigo
@@ -197,12 +202,16 @@ class Gaper inherits Enemigo
 		game.addVisual(self)
 		game.onTick(1000,evento,{self.perseguir(isaac)})
 	}
-	
-	method perseguir(elemento)
+}
+
+class Maw inherits Enemigo
+{
+	method aparecer(posicion)
 	{
-		if(elemento.position().x() > self.position().x()) {self.avanza(position.right(1))}
-		if(elemento.position().x() < self.position().x()) {self.avanza(position.left(1))}
-		if(elemento.position().y() > self.position().y()) {self.avanza(position.up(1))}
-		if(elemento.position().y() < self.position().y()) {self.avanza(position.down(1))}
+		position = posicion
+		image = "maw.png"
+		evento = "perseguir"
+		game.addVisual(self)
+		game.onTick(1000,evento,{self.perseguir(isaac)})
 	}
 }
