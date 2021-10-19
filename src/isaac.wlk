@@ -39,8 +39,8 @@ object juego
 			lagrima.disparar(0,-1)
 		})
 		
-		const a = new Gaper()
-		a.aparecer(game.at(5,5))
+		const enemigo = new Gaper()
+		enemigo.aparecer(game.at(5,5))
 		
 		game.onCollideDo(isaac,{algo => algo.impactaAIsaac()})
 		
@@ -117,6 +117,7 @@ class Elemento
 	{
 		if(game.hasVisual(self))
 		{
+			game.removeTickEvent(evento)
 			game.removeVisual(self)
 		}
 	}
@@ -194,18 +195,15 @@ class Gaper inherits Enemigo
 		image = "gaper.png"
 		evento = "perseguir"
 		game.addVisualIn(self,posicion)
-		game.onTick(10,evento,{self.avanza(position.right(1))})
+		game.onTick(100,evento,{self.perseguir(isaac)})
 		
 	}
-			
+	
 	method perseguir(elemento)
 	{
-		var nuevapos = position
-		if(elemento.position().x() > self.position().x()) {nuevapos= nuevapos.right(1)}
-		if(elemento.position().x() < self.position().x()) {nuevapos= nuevapos.left(1)}
-		if(elemento.position().y() > self.position().y()) {nuevapos= nuevapos.up(1)}
-		if(elemento.position().y() < self.position().y()) {nuevapos= nuevapos.down(1)}
-		self.avanza(nuevapos)
+		if(elemento.position().x() > self.position().x()) {self.avanza(position.right(1))}
+		if(elemento.position().x() < self.position().x()) {self.avanza(position.left(1))}
+		if(elemento.position().y() > self.position().y()) {self.avanza(position.up(1))}
+		if(elemento.position().y() < self.position().y()) {self.avanza(position.down(1))}
 	}
-	override method position(){return position}
-	}
+}
