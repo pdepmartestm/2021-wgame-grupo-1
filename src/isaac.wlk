@@ -68,11 +68,14 @@ object juego
 object habitacion
 {
 	var property enemigos=0
-	const position = game.at(0,0)
-	const image = "habitacion.png"
+	const property position = game.at(0,0)
+	var image = "habitacion0abierta.png"
 	
-	method position(){return position}
-	method image(){return image}
+	method image()
+	{
+		if(enemigos == 0) {return "habitacion" + isaac.numHabitacion() + "abierta.png"}
+		else {return "habitacion" + isaac.numHabitacion() + "cerrada.png"}
+	}
 
 	method habitacion0(){}
 	
@@ -109,7 +112,7 @@ object isaac
 	var property position = game.center()
 	var property vida = 6
 	var property image = "isaac.png"
-	var numHabitacion = 0
+	var property numHabitacion = 0
 	
 	method position(posicion){return posicion}
 	
