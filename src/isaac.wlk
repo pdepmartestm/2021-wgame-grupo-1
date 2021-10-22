@@ -2,6 +2,7 @@ import wollok.game.*
 
 object juego
 {
+	var lagrimas=0
 	const alto=12
 	const ancho=21
 	const property puertaIzquierda = game.at(1,6)
@@ -9,6 +10,7 @@ object juego
 	const property puertaArriba = game.at(10,10)
 	const property puertaAbajo = game.at(10,1)
 	
+	method lagrimas(){return lagrimas}
 	method iniciar()
 	{
 		game.height(alto)
@@ -24,21 +26,25 @@ object juego
 		
 		keyboard.left().onPressDo
 		({
+			lagrimas++
 			const lagrima = new LagrimaIsaac()
 			lagrima.disparar(-1,0)
 		})
 		keyboard.right().onPressDo
 		({
+			lagrimas++
 			const lagrima = new LagrimaIsaac()
 			lagrima.disparar(1,0)
 		})
 		keyboard.up().onPressDo
 		({
+			lagrimas++
 			const lagrima = new LagrimaIsaac()
 			lagrima.disparar(0,1)
 		})
 		keyboard.down().onPressDo
 		({
+			lagrimas++
 			const lagrima = new LagrimaIsaac()
 			lagrima.disparar(0,-1)
 		})
@@ -78,7 +84,6 @@ object habitacion
 	}
 
 	method habitacion0(){}
-	
 	method habitacion1(){
 	const enemigo = new Gaper()
 	enemigo.aparecer(game.at(5,8))
@@ -122,48 +127,56 @@ object isaac
 		{
 			if (numHabitacion==0 && orientacion=="left")
 			{	
+				game.say(self, "entre a la habitacion 1")
 				numHabitacion = 1 
 				position= juego.puertaDerecha().left(1)
 				habitacion.habitacion1()		
 			}
-			if (numHabitacion==1 && orientacion=="right")
+			else if (numHabitacion==1 && orientacion=="right")
 			{	
-				numHabitacion = 0 
+				game.say(self, "entre a la habitacion 0 desde la 1")
 				position= juego.puertaIzquierda().right(1)
 				habitacion.habitacion0()		
+				numHabitacion = 0 
 			}
-			if (numHabitacion==0 && orientacion=="up")
+			else if (numHabitacion==0 && orientacion=="up")
 			{	
+				game.say(self, "entre a la habitacion 2")
 				numHabitacion = 2 
 				position= juego.puertaAbajo().up(1)
 				habitacion.habitacion2()		
 			}
-			if (numHabitacion==2 && orientacion=="down")
+			else if (numHabitacion==2 && orientacion=="down")
 			{	
-				numHabitacion = 0 
+				game.say(self, "Volvi de la 2")
 				position= juego.puertaArriba().down(1)
 				habitacion.habitacion0()		
+				numHabitacion = 0 
 			}
-			if (numHabitacion==0 && orientacion=="right")
+			else if (numHabitacion==0 && orientacion=="right")
 			{	
+				game.say(self, "entre a la habitacion 3")
 				numHabitacion = 3 
 				position= juego.puertaIzquierda().right(1)
 				habitacion.habitacion3()		
 			}
-			if (numHabitacion==3 && orientacion=="left")
+			else if (numHabitacion==3 && orientacion=="left")
 			{	
+				game.say(self, "volvi de la 3")
 				numHabitacion = 0 
 				position= juego.puertaDerecha().left(1)
 				habitacion.habitacion0()		
 			}
-			if (numHabitacion==0 && orientacion=="down")
+			else if (numHabitacion==0 && orientacion=="down")
 			{	
+				game.say(self, "entre a la habitacion 4")
 				numHabitacion = 4 
 				position= juego.puertaArriba().down(1)
 				habitacion.habitacion4()		
 			}
-			if (numHabitacion==4 && orientacion=="up")
+			else if (numHabitacion==4 && orientacion=="up")
 			{	
+				game.say(self, "volvi de la 4")
 				numHabitacion = 0 
 				position= juego.puertaAbajo().up(1)
 				
@@ -223,7 +236,9 @@ class Lagrima inherits Elemento
 	
 	method impactaAIsaac() {}
 	
-	method impactoEnemigo() {}
+	method impactoEnemigo() {
+		 self.desaparecer()
+	}
 	
 	method impactoLagrimaIsaac() {}
 	
@@ -244,10 +259,10 @@ class Lagrima inherits Elemento
 class LagrimaIsaac inherits Lagrima
 {
 	override method danio() = isaac.danio()
-	
+
 	method disparar(direccionX,direccionY) //
 	{
-		evento = "lagrimaIsaac"
+		evento = "lagrimaIsaac"+juego.lagrimas()
 		image = "lagrima.png"
 		position = isaac.position().right(direccionX).up(direccionY)
 		game.addVisual(self)
@@ -336,7 +351,7 @@ class Maw inherits Enemigo
 		habitacion.enemigos(habitacion.enemigos()+1)
 		position = posicion
 		image = "maw.png"
-		evento = "perseguir"
+		evento = "perseguir1"
 		evento2 = "disparar"
 		game.addVisual(self)
 		game.onTick(1000,evento,{self.perseguir(isaac)})
