@@ -2,7 +2,7 @@ import wollok.game.*
 
 object juego
 {
-	var lagrimas=0
+	var property lagrimas=0
 	const alto=12
 	const ancho=21
 	const property puertaIzquierda = game.at(1,6)
@@ -75,7 +75,6 @@ object habitacion
 {
 	var property enemigos=0
 	const property position = game.at(0,0)
-	var image = "habitacion0abierta.png"
 	
 	method image()
 	{
@@ -85,26 +84,106 @@ object habitacion
 
 	method habitacion0(){}
 	method habitacion1(){
-	const enemigo = new Gaper()
-	enemigo.aparecer(game.at(5,8))
-	const enemigo2 = new Maw()
-	enemigo2.aparecer(game.at(15,8))
-	const enemigo3 = new Torre()
-	enemigo3.aparecer(game.at(3,3))
+		if (not isaac.habitacionesHechas().any({number=> number==1}))
+		{
+		const enemigo = new Gaper()
+		enemigo.aparecer(game.at(5,8),enemigos)
+		
+		const enemigo = new Gaper()
+		enemigo.aparecer(game.at(8,8),enemigos)
+		
+		const enemigo = new Maw()
+		enemigo.aparecer(game.at(5,3),enemigos)
+		
+		const enemigo = new Maw()
+		enemigo.aparecer(game.at(8,3),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(2,2),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(2,9),enemigos)
+		
+		isaac.habitacionesHechas().add(1)
+		
+		}
+		else{}
+		
+		}
+	
+	method habitacion2(){
+	isaac.habitacionesHechas().add(2)
+			const enemigo = new Torre()
+		enemigo.aparecer(game.at(2,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(3,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(4,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(5,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(6,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(7,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(8,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(9,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(10,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(11,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(12,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(13,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(14,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(15,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(16,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(17,9),enemigos)
+		
+		const enemigo = new Torre()
+		enemigo.aparecer(game.at(18,9),enemigos)
 	}
 	
-	method habitacion2(){}
+	method habitacion3(tieneItem){
+		if (not tieneItem) {		
+		const item = new Objeto()
+		item.aparecer([1,2,3].anyOne())}
+		else{}
+	}
 	
-	method habitacion3(){}
-	
-	method habitacion4(){}	
+	method habitacion4(){
+	isaac.habitacionesHechas().add(1)
+	}	
 }
 
 object barraIsaac
 {
+	var property limite = 6
 	const position = game.at(0.5,11)
 	method image(){
-		return "Vida" + isaac.vida() + ".png"
+		if (limite==6){return "Vida" + isaac.vida() + ".png"}
+		else {return "Vida"+ isaac.vida() +"Ampliada.png"}
 	}
 	method position(){
 		return position
@@ -113,70 +192,73 @@ object barraIsaac
 
 object isaac
 {
+	var item = false
+	var property velAtaque = 100
 	var property danio = 1
 	var property position = game.center()
 	var property vida = 6
 	var property image = "isaac.png"
 	var property numHabitacion = 0
+	var property habitacionesHechas=[]
 	
 	method position(posicion){return posicion}
-	
+	method item(tieneItem){item = tieneItem}
 	method cambiaHabitacion(orientacion)
 	{
 		if(habitacion.enemigos() == 0)
 		{
 			if (numHabitacion==0 && orientacion=="left")
 			{	
-				game.say(self, "entre a la habitacion 1")
+				
 				numHabitacion = 1 
 				position= juego.puertaDerecha().left(1)
 				habitacion.habitacion1()		
 			}
 			else if (numHabitacion==1 && orientacion=="right")
 			{	
-				game.say(self, "entre a la habitacion 0 desde la 1")
+
 				position= juego.puertaIzquierda().right(1)
 				habitacion.habitacion0()		
 				numHabitacion = 0 
 			}
 			else if (numHabitacion==0 && orientacion=="up")
 			{	
-				game.say(self, "entre a la habitacion 2")
+
 				numHabitacion = 2 
 				position= juego.puertaAbajo().up(1)
 				habitacion.habitacion2()		
 			}
 			else if (numHabitacion==2 && orientacion=="down")
 			{	
-				game.say(self, "Volvi de la 2")
+
 				position= juego.puertaArriba().down(1)
 				habitacion.habitacion0()		
 				numHabitacion = 0 
 			}
 			else if (numHabitacion==0 && orientacion=="right")
 			{	
-				game.say(self, "entre a la habitacion 3")
+
 				numHabitacion = 3 
 				position= juego.puertaIzquierda().right(1)
-				habitacion.habitacion3()		
+				habitacion.habitacion3(item)				
 			}
 			else if (numHabitacion==3 && orientacion=="left")
 			{	
-				game.say(self, "volvi de la 3")
+
 				numHabitacion = 0 
 				position= juego.puertaDerecha().left(1)
 				habitacion.habitacion0()		
 			}
 			else if (numHabitacion==0 && orientacion=="down")
 			{	
-				game.say(self, "entre a la habitacion 4")
+
 				numHabitacion = 4 
 				position= juego.puertaArriba().down(1)
 				habitacion.habitacion4()		
 			}
 			else if (numHabitacion==4 && orientacion=="up")
 			{	
-				game.say(self, "volvi de la 4")
+
 				numHabitacion = 0 
 				position= juego.puertaAbajo().up(1)
 				
@@ -218,6 +300,7 @@ class Elemento
 	var property evento = null
 	var property evento2 = null
 	
+	method agarraItem(n){}
 	method cambiaHabitacion(a){}
 	method desaparecer()
 	{
@@ -267,7 +350,7 @@ class LagrimaIsaac inherits Lagrima
 		position = isaac.position().right(direccionX).up(direccionY)
 		game.addVisual(self)
 		game.onCollideDo(self,{elemento=>elemento.impactoLagrimaIsaac()})
-		game.onTick(100,evento,{self.avanza(position.right(direccionX).up(direccionY))})
+		game.onTick(isaac.velAtaque(),evento,{self.avanza(position.right(direccionX).up(direccionY))})
 	}
 }
 
@@ -275,8 +358,8 @@ class LagrimaEnemigo inherits Lagrima
 {
 	method disparar(posicion,direccionX,direccionY)
 	{
-		evento = "lagrimaEnemiga"
-		image= "lagrimaenemigo.png"
+		evento = "lagrimaEnemiga"+juego.lagrimas()
+		image = "lagrimaenemigo.png"
 		position = posicion
 		game.addVisual(self)
 		game.onCollideDo(self,{elemento=>elemento.impactoLagrimaEnemiga()})
@@ -328,49 +411,50 @@ class Enemigo inherits Elemento
 			lagrima.disparar(position,1,0)}
 		if(elemento.position().y() == self.position().y() && elemento.position().x() < self.position().x()) {const lagrima = new LagrimaEnemigo()
 			lagrima.disparar(position,-1,0)}
+		juego.lagrimas(juego.lagrimas()+1)
 	}
 }
 
 class Gaper inherits Enemigo
 {
-	method aparecer(posicion)
+	method aparecer(posicion,nro)
 	{
 		habitacion.enemigos(habitacion.enemigos()+1)
 		position = posicion
 		image = "enemigo1.png"
-		evento = "perseguir"
+		evento = "perseguir"+nro
 		game.addVisual(self)
-		game.onTick(700,evento,{self.perseguir(isaac)})
+		game.onTick(500,evento,{self.perseguir(isaac)})
 	}
 }
 
 class Maw inherits Enemigo
 {
-	method aparecer(posicion)
+	method aparecer(posicion,nro)
 	{
 		habitacion.enemigos(habitacion.enemigos()+1)
 		position = posicion
 		image = "maw.png"
-		evento = "perseguir1"
-		evento2 = "disparar"
+		evento = "perseguir"+nro
+		evento2 = "disparar"+nro
 		game.addVisual(self)
 		game.onTick(1000,evento,{self.perseguir(isaac)})
-		game.onTick(3000,evento2, {self.disparar(isaac)})
+		game.onTick(2000,evento2, {self.disparar(isaac)})
 	}
 }
 
 class Torre inherits Enemigo
 {
-	method aparecer(posicion)
+	method aparecer(posicion,nro)
 	{
 		habitacion.enemigos(habitacion.enemigos()+1)
 		position = posicion
 		image = "torre2.png"
-		evento = "levantarse"
-		evento2 = "disparar"
+		evento = "levantarse"+nro
+		evento2 = "disparar"+nro
 		game.addVisual(self)
 		game.onTick(800,evento,{self.trakear(isaac)})
-		game.onTick(3000,evento2, {self.disparar(isaac)})
+		game.onTick(2000,evento2, {self.disparar(isaac)})
 	}
 	
 	method trakear (elemento)
@@ -398,5 +482,36 @@ class Puerta inherits Elemento
 	image="void.png"
 	game.addVisual(self)
 	game.onCollideDo(self,{elemento=>elemento.cambiaHabitacion(orientacion)})
+	}
+}
+class Objeto inherits Elemento
+{
+	var nroObjeto=null
+	method impactoLagrimaEnemiga() {}
+	
+	method impactaAIsaac() {
+		isaac.item(true)
+		game.removeVisual(self)
+		if (nroObjeto == 1){isaac.danio(isaac.danio()+5) game.say(isaac, "5 de danio")}
+		if (nroObjeto == 2){isaac.vida(isaac.vida()+2)
+		game.say(isaac, "mas vida")
+		barraIsaac.limite(barraIsaac.limite() + 2)}
+		if (nroObjeto == 3){isaac.velAtaque(isaac.velAtaque()-50)
+		game.say(isaac,"las lagrimas van mas rapido")
+		}
+		habitacion.enemigos(habitacion.enemigos()-1)
+		
+	}
+	
+	method impactoEnemigo() {}
+	
+	method impactoLagrimaIsaac() {}
+	
+	method aparecer(nroItem){
+	nroObjeto = nroItem
+	habitacion.enemigos(habitacion.enemigos()+1)
+	position=game.center()
+	image="Item"+nroItem+".png"
+	game.addVisual(self)
 	}
 }
