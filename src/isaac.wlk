@@ -67,14 +67,20 @@ object juego
 	{
 		return posicion.x() >= 2 && posicion.x() < ancho-2 && posicion.y() >= 2 && posicion.y() < alto-2
 	}
-
 	
+	method finalizar()
+	{
+		game.clear()
+		game.addVisual(cartel)
+		game.onTick(5000,"finalizar",{game.stop()})
+	}
 }
 
 object habitacion
 {
 	var property enemigos=0
 	const property position = game.at(0,0)
+	var property image
 	
 	method image()
 	{
@@ -112,57 +118,38 @@ object habitacion
 		}
 	
 	method habitacion2(){
-	isaac.habitacionesHechas().add(2)
-			const enemigo = new Torre()
+	if (not isaac.habitacionesHechas().any({number=> number==2}))
+		{
+		isaac.habitacionesHechas().add(2)
+		
+		const enemigo = new Torre()
 		enemigo.aparecer(game.at(2,9),enemigos)
 		
 		const enemigo = new Torre()
-		enemigo.aparecer(game.at(3,9),enemigos)
-		
-		const enemigo = new Torre()
 		enemigo.aparecer(game.at(4,9),enemigos)
-		
-		const enemigo = new Torre()
-		enemigo.aparecer(game.at(5,9),enemigos)
-		
+
 		const enemigo = new Torre()
 		enemigo.aparecer(game.at(6,9),enemigos)
-		
-		const enemigo = new Torre()
-		enemigo.aparecer(game.at(7,9),enemigos)
-		
+
 		const enemigo = new Torre()
 		enemigo.aparecer(game.at(8,9),enemigos)
-		
-		const enemigo = new Torre()
-		enemigo.aparecer(game.at(9,9),enemigos)
-		
+
 		const enemigo = new Torre()
 		enemigo.aparecer(game.at(10,9),enemigos)
-		
-		const enemigo = new Torre()
-		enemigo.aparecer(game.at(11,9),enemigos)
-		
+
 		const enemigo = new Torre()
 		enemigo.aparecer(game.at(12,9),enemigos)
-		
-		const enemigo = new Torre()
-		enemigo.aparecer(game.at(13,9),enemigos)
-		
+
 		const enemigo = new Torre()
 		enemigo.aparecer(game.at(14,9),enemigos)
-		
-		const enemigo = new Torre()
-		enemigo.aparecer(game.at(15,9),enemigos)
-		
+
 		const enemigo = new Torre()
 		enemigo.aparecer(game.at(16,9),enemigos)
-		
-		const enemigo = new Torre()
-		enemigo.aparecer(game.at(17,9),enemigos)
-		
+
 		const enemigo = new Torre()
 		enemigo.aparecer(game.at(18,9),enemigos)
+		}
+		else{}
 	}
 	
 	method habitacion3(tieneItem){
@@ -173,7 +160,28 @@ object habitacion
 	}
 	
 	method habitacion4(){
-	isaac.habitacionesHechas().add(1)
+	if(not isaac.habitacionesHechas().any({number=> number==4}))
+		{
+			isaac.habitacionesHechas().add(4)
+			
+			const enemigo = new Torre()
+			enemigo.aparecer(game.at(3,3),enemigos)
+			
+			const enemigo = new Maw()
+			enemigo.aparecer(game.at(4,3),enemigos)
+			
+			const enemigo = new Gaper()
+			enemigo.aparecer(game.at(5,3),enemigos)
+			
+			const enemigo = new Gaper()
+			enemigo.aparecer(game.at(15,3),enemigos)
+			
+			const enemigo = new Maw()
+			enemigo.aparecer(game.at(16,3),enemigos)
+			
+			const enemigo = new Torre()
+			enemigo.aparecer(game.at(17,3),enemigos)
+		}
 	}	
 }
 
@@ -281,7 +289,10 @@ object isaac
     method impactoLagrimaEnemiga()
 	{
 		if (vida>1) {vida--}
-		else {game.stop()}
+		else {
+			vida--
+			juego.finalizar()
+		}
 	}
 	
 	method impactoLagrimaIsaac() {}
@@ -289,7 +300,10 @@ object isaac
 	method impactoEnemigo()
 	{
 		if (vida>1) {vida--}
-		else {game.stop()}
+		else {
+			vida--
+			juego.finalizar()
+		}
 	}
 }
 
@@ -380,6 +394,11 @@ class Enemigo inherits Elemento
 		{
 			habitacion.enemigos(habitacion.enemigos()-1)
 			self.desaparecer()
+			if(habitacion.enemigos() == 0 && isaac.habitacionesHechas().size() == 3) {juego.finalizar()}
+			else if(habitacion.enemigos() == 0) {
+				const item = new Objeto()
+				item.aparecer(4)
+			}
 		}
 	}
 	
@@ -490,15 +509,15 @@ class Objeto inherits Elemento
 	method impactoLagrimaEnemiga() {}
 	
 	method impactaAIsaac() {
-		isaac.item(true)
+		if(nroObjeto != 4) {isaac.item(true)}
 		game.removeVisual(self)
 		if (nroObjeto == 1){isaac.danio(isaac.danio()+5) game.say(isaac, "5 de danio")}
 		if (nroObjeto == 2){isaac.vida(isaac.vida()+2)
 		game.say(isaac, "mas vida")
 		barraIsaac.limite(barraIsaac.limite() + 2)}
 		if (nroObjeto == 3){isaac.velAtaque(isaac.velAtaque()-50)
-		game.say(isaac,"las lagrimas van mas rapido")
-		}
+		game.say(isaac,"las lagrimas van mas rapido")}
+		if (nroObjeto == 4){if(isaac.vida() <= 4) {isaac.vida(isaac.vida()+2)} else {isaac.vida(6)}}
 		habitacion.enemigos(habitacion.enemigos()-1)
 		
 	}
@@ -513,5 +532,17 @@ class Objeto inherits Elemento
 	position=game.center()
 	image="Item"+nroItem+".png"
 	game.addVisual(self)
+	}
+	
+}
+
+object cartel
+{
+	const property position = game.origin()
+	
+	method image()
+	{
+		if(isaac.vida() == 0) {return "gameOver.png"}
+		else {return "win.png"}
 	}
 }
