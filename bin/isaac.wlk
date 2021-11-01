@@ -75,10 +75,9 @@ object juego
 	}
 }
 
-object habitacion0
-{	
+class Habitacion
+{
 	const property position = game.at(0,0)
-	var image="habitacion0abierta.png"
 	
 	method impactoLagrimaEnemiga() {}
 	
@@ -88,37 +87,58 @@ object habitacion0
 	
 	method impactoLagrimaIsaac() {}
 	
-	method cambiaHabitacion(a){}
+	method left() {isaac.position(juego.puertaDerecha().left(1))}
+	method right() {isaac.position(juego.puertaIzquierda().right(1))}
+	method up() {isaac.position(juego.puertaAbajo().up(1))}
+	method down() {isaac.position(juego.puertaArriba().down(1))}
 	
 	method image()
 	{
-	if (isaac.enemigos()==0)
-	{
-		image="habitacion"+isaac.numHabitacion()+"abierta.png"
-		return image
-	}
-	else {
-		image =  "habitacion"+isaac.numHabitacion()+"cerrada.png"
-		return image
-	}
-	}
-	method aparecer(){
-		image="habitacion0abierta.png"
-		
+		if (isaac.enemigos()==0)
+		{
+		return "habitacion"+isaac.numHabitacion()+"abierta.png"
+		}
+		else {
+		return "habitacion"+isaac.numHabitacion()+"cerrada.png"
+		}
 	}
 }
-object habitacion1
+
+object habitacion0 inherits Habitacion
+{	
+	method aparecer(){}
+	
+	method cambiaHabitacion(orientacion)
+	{
+		if(orientacion == "left")
+		{
+			self.left()
+			isaac.numHabitacion(1)
+			return habitacion1
+		}else
+		if(orientacion == "right")
+		{
+			self.right()
+			isaac.numHabitacion(3)
+			return habitacion3
+		}else
+		if(orientacion == "up")
+		{
+			self.up()
+			isaac.numHabitacion(2)
+			return habitacion2
+		}else
+		if(orientacion == "down")
+		{
+			self.down()
+			isaac.numHabitacion(4)
+			return habitacion4
+		}else {return self}
+	}
+}
+
+object habitacion1 inherits Habitacion
 {
-	method impactoLagrimaEnemiga() {}
-	
-	method impactaAIsaac() {}
-	
-	method impactoEnemigo() {}
-	
-	method impactoLagrimaIsaac() {}
-	
-	method cambiaHabitacion(a){}
-	
 	method aparecer()
 	{
 		if (not isaac.habitacionesHechas().any({number=> number==1}))
@@ -145,19 +165,21 @@ object habitacion1
 		}
 		else{}
 	}
+	
+	method cambiaHabitacion(orientacion)
+	{
+		if(orientacion == "right")
+		{
+			self.right()
+			isaac.numHabitacion(0)
+			return habitacion0
+		}else {return self}
+	}
+	
 }
-object habitacion2
+
+object habitacion2 inherits Habitacion
 {
-	method impactoLagrimaEnemiga() {}
-	
-	method impactaAIsaac() {}
-	
-	method impactoEnemigo() {}
-	
-	method impactoLagrimaIsaac() {}
-	
-	method cambiaHabitacion(a){}
-	
 	method aparecer()
 	{
 
@@ -193,42 +215,45 @@ object habitacion2
 		enemigo.aparecer(game.at(18,9),isaac.enemigos())
 		}
 		else{}	
-	}	
+	}
+	
+	method cambiaHabitacion(orientacion)
+	{
+		if(orientacion == "down")
+		{
+			self.down()
+			isaac.numHabitacion(0)
+			return habitacion0
+		}else {return self}
+	}
 }
-object habitacion3
+object habitacion3 inherits Habitacion
 {
-	method impactoLagrimaEnemiga() {}
-	
-	method impactaAIsaac() {}
-	
-	method impactoEnemigo() {}
-	
-	method impactoLagrimaIsaac() {}
-	
-	method cambiaHabitacion(a){}
-
 	method aparecer()
 	{
 		if (not isaac.item()) {		
 		const item = new Objeto()
 		item.aparecer([1,2,3].anyOne())}
 		else{}
-	}	
+	}
+	
+	method cambiaHabitacion(orientacion)
+	{
+		if(orientacion == "left")
+		{
+			self.left()
+			isaac.numHabitacion(0)
+			return habitacion0
+		}else {return self}
+	}
 }
-object habitacion4
+object habitacion4 inherits Habitacion
 {
-	method impactoLagrimaEnemiga() {}
-	
-	method impactaAIsaac() {}
-	
-	method impactoEnemigo() {}
-	
-	method impactoLagrimaIsaac() {}
-	
-	method cambiaHabitacion(a){}
-	
-	method aparecer(){			
+	method aparecer()
+	{			
 
+		if(not isaac.habitacionesHechas().any({number=> number==4}))
+		{
 		isaac.habitacionesHechas().add(4)
 			
 		const enemigo = new Torre()
@@ -247,7 +272,19 @@ object habitacion4
 		enemigo.aparecer(game.at(16,3),isaac.enemigos())
 			
 		const enemigo = new Torre()
-		enemigo.aparecer(game.at(17,3),isaac.enemigos())}
+		enemigo.aparecer(game.at(17,3),isaac.enemigos())
+		}
+	}
+		
+		method cambiaHabitacion(orientacion)
+	{
+		if(orientacion == "up")
+		{
+			self.up()
+			isaac.numHabitacion(0)
+			return habitacion0
+		}else {return self}
+	}
 }
 
 object barraIsaac
@@ -273,78 +310,25 @@ object isaac
 	var property position = game.center()
 	var property vida = 6
 	var property image = "isaac.png"
+	var property habitacionActual = habitacion0
 	var property numHabitacion = 0
 	var property habitacionesHechas=[]
 	
 	method item(tieneItem){item = tieneItem}
 	method item(){return item}
+	
 	method cambiaHabitacion(orientacion)
 	{
-		if(isaac.enemigos() == 0)
+		if(self.enemigos() == 0)
 		{
-			if (numHabitacion==0 && orientacion=="left")
-			{	
-				
-				numHabitacion = 1 
-				position= juego.puertaDerecha().left(1)
-				habitacion1.aparecer()	
-			}
-			else if (numHabitacion==1 && orientacion=="right")
-			{	
-
-				position= juego.puertaIzquierda().right(1)
-				habitacion0.aparecer()		
-				numHabitacion = 0 
-			}
-			else if (numHabitacion==0 && orientacion=="up")
-			{	
-
-				numHabitacion = 2 
-				position= juego.puertaAbajo().up(1)
-				habitacion2.aparecer()		
-			}
-			else if (numHabitacion==2 && orientacion=="down")
-			{	
-
-				position= juego.puertaArriba().down(1)
-				habitacion0.aparecer()		
-				numHabitacion = 0 
-			}
-			else if (numHabitacion==0 && orientacion=="right")
-			{	
-
-				numHabitacion = 3 
-				position= juego.puertaIzquierda().right(1)
-				habitacion3.aparecer()				
-			}
-			else if (numHabitacion==3 && orientacion=="left")
-			{	
-
-				numHabitacion = 0 
-				position= juego.puertaDerecha().left(1)
-				habitacion0.aparecer()		
-			}
-			else if (numHabitacion==0 && orientacion=="down")
-			{	
-
-				numHabitacion = 4 
-				position= juego.puertaArriba().down(1)
-				habitacion4.aparecer()		
-			}
-			else if (numHabitacion==4 && orientacion=="up")
-			{	
-
-				numHabitacion = 0 
-				position= juego.puertaAbajo().up(1)
-				
-				habitacion0.aparecer()		
-			}
+			habitacionActual = habitacionActual.cambiaHabitacion(orientacion)
+			habitacionActual.aparecer()
 		}
 	}
 	
 	method avanza(posicion)
 	{
-		if(isaac.enemigos() == 0)
+		if(self.enemigos() == 0)
 		{
 			if(posicion == juego.puertaIzquierda() || posicion == juego.puertaDerecha() || posicion == juego.puertaArriba() || posicion == juego.puertaAbajo())
 			{
