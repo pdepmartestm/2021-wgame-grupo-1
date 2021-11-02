@@ -10,7 +10,9 @@
 
 ## Capturas
 
-(agregar)
+![](ScreemShot1.png)
+![](ScreemShot2.png)
+![](ScreemShot3.png)
 
 ## Reglas de Juego / Instrucciones
 
@@ -29,5 +31,5 @@ Para disparar, utilizar las flechas de direccion
 
 - K2002 / UTN Facultad regional de Buenos Aires
 - Versión de wollok
-- Una vez terminado, no tenemos problemas en que el repositorio sea público / queremos manternerlo privado
+- Una vez terminado, no tenemos problemas en que el repositorio sea público
 
