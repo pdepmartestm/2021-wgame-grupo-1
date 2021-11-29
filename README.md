@@ -16,7 +16,7 @@
 
 ## Reglas de Juego / Instrucciones
 
-El juego esta basado en "the binding of isaac". El objetivo del juego es eliminar a todos los enemigos que
+El juego esta basado en "The Binding of Isaac". El objetivo del juego es eliminar a todos los enemigos que
 hay en el piso, pero cuidado que si te descuidas podrias ser tu el eliminado.
 
 Para mover al personaje, utilizar:
